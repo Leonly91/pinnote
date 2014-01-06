@@ -16,7 +16,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    @Override                                        public Fragment getItem(int i) {
+    @Override    
+    public Fragment getItem(int i) {
         switch(i){
             case 0:
                 return new AFragment();

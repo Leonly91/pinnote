@@ -1,6 +1,7 @@
 package com.example.pinnote;//test for git
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -10,13 +11,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +37,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter navDrawerListadapter;
+    private ListView mTodoListView;
 
     //private NavDrawerListAdapter adapter;
     private String tabs[] = {"To Do", "Doing", "Done"};
@@ -48,6 +53,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         //Add DrawerLayout
         initDrawerView();
+        
+        //initListData();
 
         if (savedInstanceState == null){
             //displayView(0);
@@ -127,6 +134,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
+    
+    private void initListData(){
+    	List<String> data = new ArrayList<String>();
+    	for (int i = 0; i < 20; i++) {
+    		data.add("data:" + i);
+    	}
+    	mTodoListView = (ListView)viewPager.findViewById(R.id.todoList);
+        if (null != mTodoListView){
+        	mTodoListView.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, data));
+        }
+    	
+    }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -137,6 +156,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         //To change body of implemented methods use File | Settings | File Templates.
         viewPager.setCurrentItem(tab.getPosition());
+        FragmentPagerAdapter adapter = (FragmentPagerAdapter)viewPager.getAdapter();
+        Fragment f = adapter.getItem(viewPager.getCurrentItem());
+        Toast.makeText(this, "onTabSelected:"+f.getView(), Toast.LENGTH_SHORT).show();
+        
+//        ListView lstViw = (ListView)f.getView().findViewById(R.id.todoList);
+//        if (null == lstViw){
+//        	Toast.makeText(this, "is null", Toast.LENGTH_SHORT).show();
+//        }else{
+//        	Toast.makeText(this, "onTabSelected", Toast.LENGTH_SHORT).show();
+//        }
+        
+        
     }
 
 	@Override
