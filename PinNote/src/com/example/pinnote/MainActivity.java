@@ -24,7 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
+public class MainActivity extends FragmentActivity {
     private ViewPager viewPager;
     private ActionBar actionBar;
     private TabsPagerAdapter mAdapter;
@@ -74,7 +74,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         for (String tab_name : tabs){
-            actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener(this));
+            actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener(new MyTabListener()));
         }
 
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
@@ -147,34 +147,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	
     }
 
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        //To change body of implemented methods use File | Settings | File Templates.
-        viewPager.setCurrentItem(tab.getPosition());
-        FragmentPagerAdapter adapter = (FragmentPagerAdapter)viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        Toast.makeText(this, "onTabSelected:"+f.getView(), Toast.LENGTH_SHORT).show();
-        
-//        ListView lstViw = (ListView)f.getView().findViewById(R.id.todoList);
-//        if (null == lstViw){
-//        	Toast.makeText(this, "is null", Toast.LENGTH_SHORT).show();
-//        }else{
-//        	Toast.makeText(this, "onTabSelected", Toast.LENGTH_SHORT).show();
-//        }
-        
-        
-    }
-
-	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
         //super.onCreateOptionsMenu(menu);
@@ -221,5 +193,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    
+    class MyTabListener implements ActionBar.TabListener{
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            //To change body of implemented methods use File | Settings | File Templates.
+            viewPager.setCurrentItem(tab.getPosition());
+            FragmentPagerAdapter adapter = (FragmentPagerAdapter)viewPager.getAdapter();
+            Fragment f = adapter.getItem(viewPager.getCurrentItem());
+            
+            
+        }
+
+    	@Override
+    	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+    		// TODO Auto-generated method stub
+    		
+    	}
     }
 }
