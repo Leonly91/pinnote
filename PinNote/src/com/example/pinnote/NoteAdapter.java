@@ -1,9 +1,9 @@
 package com.example.pinnote;
 
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +37,7 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 			holder = new NoteHolder();
 			holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
 			holder.txtTitle = (TextView)row.findViewById(R.id.noteText);
+			holder.endTime = (TextView)row.findViewById(R.id.endTime);
 			
 			row.setTag(holder);
 		}
@@ -46,13 +47,16 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 		
 		Note note = data[position];
 		holder.txtTitle.setText(note.getmTitle());
-		holder.imgIcon.setImageResource(R.drawable.circle);
+		GradientDrawable backgroundGradient = (GradientDrawable)holder.imgIcon.getBackground();
+		backgroundGradient.setColor(context.getResources().getColor(R.color.yellow_alarm));
+		
 		return row;
 	}
 	
 	static class NoteHolder
     {
-        ImageView imgIcon;
+		ImageView imgIcon;
         TextView txtTitle;
+        TextView endTime;
     }
 }

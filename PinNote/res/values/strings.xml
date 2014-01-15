@@ -33,5 +33,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="OK">OK</string>
+    
+    <string name="preference_file_key">com.example.pinnote.PREFERENCE_FILE_KEY_by_terry</string>
 
 </resources>

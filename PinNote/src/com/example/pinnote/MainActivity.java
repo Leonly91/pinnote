@@ -2,6 +2,7 @@ package com.example.pinnote;//test for git
 
 import java.util.ArrayList;
 import java.util.List;
+import com.example.pinnote.db.*;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -59,6 +60,8 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null){
             //displayView(0);
         }
+        
+        DBUtil.TestSaveObject(this);
 
     }
     

@@ -3,6 +3,8 @@ package com.example.pinnote;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.pinnote.comm.ListViewItemLongClickIListener;
+
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ public class AFragment extends Fragment {
     
     private void fillListData(View view){
     	todoList = (ListView)view.findViewById(R.id.todoList);
+    	todoList.setOnItemLongClickListener(new ListViewItemLongClickIListener(todoList, getActivity()));
+    	
     	if (todoList != null){
     		List<String> data = new ArrayList<String>();
         	for (int i = 0; i < 20; i++) {

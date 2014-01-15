@@ -8,4 +8,5 @@
     <color name="counter_text_color">#c5c4c4</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
+    <color name="yellow_alarm">#FFCC00</color>
 </resources>
