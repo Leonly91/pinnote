@@ -1,13 +1,16 @@
 package com.example.pinnote;
 
+import com.example.pinnote.comm.NoteType;
+
 public class Note {
+	private String mId;
 	private int mLevel;
 	private int mImageIcon;
 	private String mTitle;
 	private String mContent;
-	private String mId;
 	private String mAlarm;
 	private String mDeadLine;
+	private NoteType type;
 	
 	public Note(int mImageIcon, String mTitle){
 		this.mTitle = mTitle;
@@ -30,6 +33,14 @@ public class Note {
 		this.mImageIcon = mImageIcon;
 	}
 	
+	public NoteType getType() {
+		return type;
+	}
+
+	public void setType(NoteType type) {
+		this.type = type;
+	}
+
 	public int getmLevel() {
 		return mLevel;
 	}

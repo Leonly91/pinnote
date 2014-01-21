@@ -2,9 +2,11 @@ package com.example.pinnote;//test for git
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.example.pinnote.db.*;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
@@ -39,6 +41,8 @@ public class MainActivity extends FragmentActivity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter navDrawerListadapter;
     private ListView mTodoListView;
+    
+    private boolean doubleBackToExitPressedOnce;
 
     //private NavDrawerListAdapter adapter;
     private String tabs[] = {"To Do", "Doing", "Done"};
@@ -61,7 +65,7 @@ public class MainActivity extends FragmentActivity {
             //displayView(0);
         }
         
-        DBUtil.TestSaveObject(this);
+//        DBUtil.TestSaveObject(this);
 
     }
     
@@ -219,5 +223,22 @@ public class MainActivity extends FragmentActivity {
     		// TODO Auto-generated method stub
     		
     	}
+    }
+    
+    public void onBackPressed(){
+    	if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+             doubleBackToExitPressedOnce=false;   
+
+            }
+        }, 2000);
     }
 }

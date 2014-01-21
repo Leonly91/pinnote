@@ -1,5 +1,7 @@
 package com.example.pinnote.db;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -9,22 +11,55 @@ import android.util.Log;
 
 import com.example.pinnote.Note;
 import com.example.pinnote.R;
+import com.example.pinnote.comm.NoteType;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class DBUtil {
-	private static SharedPreferences sharedPref = null;
 	
-	public static SharedPreferences getSharedPref(Context context){
-		if (null == sharedPref){
-			sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		}
-		return sharedPref;
+	public static int keyId = 0;
+	
+	public static String generalId(){
+		keyId++;
+		Date date = new Date();
+		
+		String key = String.valueOf(date.getTime()) + "_" + keyId;
+		
+		Log.v("liny:key= ", key);
+		return key;
 	}
 	
-	public static boolean saveNote(Note note){
+	public static SharedPreferences getPinNoteSharedPref(Context context){
+			return context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+	}
+	
+	
+	public static boolean addNote(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
-			
+			switch(type){
+			case TODO:
+				note.setmId(generalId());
+				Editor prefsEditor = getPinNoteSharedPref(context).edit();
+				Gson gson = new Gson();
+				List<Note> note_data = DBUtil.getNoteList(context, "todolist");
+				if (note_data == null){
+					note_data = new ArrayList<Note>();
+					note_data.add(note);
+				}else{
+					note_data.add(note);
+				}
+				
+				String jsonStr = gson.toJson(note_data);
+				prefsEditor.putString("todolist", jsonStr);
+				prefsEditor.commit();
+				break;
+			case DOING:
+			case DONE:
+			default:
+				ret = false;
+				break;
+			}
 		}catch(Exception ex){
 			Log.e("DBUtil call saveNote failed:", ex.getMessage());
 			ret = false;
@@ -32,11 +67,67 @@ public class DBUtil {
 		return ret;
 	}
 	
-	public static boolean saveNoteList(Context context, String key, List<Note> list){
+	public static boolean delNote(Context context, String noteId, NoteType type){
+		try{
+			Editor prefsEditor = getPinNoteSharedPref(context).edit();
+			Gson gson = new Gson();
+			List<Note> note_data = null;
+			String noteListStoreName = "";
+			
+			switch (type){
+			case TODO:
+				noteListStoreName = "todolist";
+				break;
+			case DOING:
+				noteListStoreName = "doinglist";
+			case DONE:
+				noteListStoreName = "donelist";
+			default:
+				break;
+			}
+			
+			note_data = DBUtil.getNoteList(context, noteListStoreName);
+			if (note_data != null){
+				for (int i = 0; i < note_data.size(); i++){
+					if (note_data.get(i).getmId().equals(noteId)){
+						note_data.remove(i);
+						break;
+					}
+				}
+			}
+			
+			String jsonStr = gson.toJson(note_data);
+			prefsEditor.putString("todolist", jsonStr);
+			prefsEditor.commit();
+		}catch(Exception ex){
+			Log.e("DBUtil call saveNote failed:", ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean updateNote(Note note, NoteType type){
 		boolean ret = true;
 		try{
-			Editor prefsEditor = getSharedPref(context).edit();
+			switch(type){
+			
+			}
+		}catch(Exception ex){
+			Log.e("DBUtil call updateNote failed:", ex.getMessage());
+			ret = false;
+		}
+		return ret;
+	}
+	
+	public static boolean saveNoteArray(Context context, String key, Note[] note_data){
+		boolean ret = true;
+		try{
+			Editor prefsEditor = getPinNoteSharedPref(context).edit();
 			Gson note = new Gson();
+			
+			String jsonStr = note.toJson(note_data);
+			prefsEditor.putString(R.string.store_string + key, jsonStr);
+			prefsEditor.commit();
 		}catch(Exception ex){
 			Log.e("DBUtil call saveList failed:", ex.getMessage());
 			ret = false;
@@ -44,22 +135,63 @@ public class DBUtil {
 		return ret;
 	}
 	
-	public static List<Note> getNoteList(String key){
-		return null;
+	public static List<Note> getNoteList(Context context, String key){
+		List<Note> noteList = null;
+		try{
+			Gson note = new Gson();
+			String saveJson = getPinNoteSharedPref(context).getString(key,"");
+			noteList = note.fromJson(saveJson, new TypeToken<List<Note>>(){}.getType());
+			return noteList;
+		}catch(Exception ex){
+			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());
+		}
+		return noteList;
+	}
+	
+	public static Note[] getTodoNoteArray(Context context){
+		return DBUtil.getNoteArray(context, "todolist");
+	}
+	
+	public static Note[] getNoteArray(Context context, String key){
+		Note[] ret = null;
+		try{
+			Gson note = new Gson();
+			String saveJson = getPinNoteSharedPref(context).getString(key,"");
+			Note note_data[] = note.fromJson(saveJson, Note[].class);
+			return note_data;
+		}catch(Exception ex){
+			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());
+		}
+		return ret;
 	}
 	
 	public static void TestSaveObject(Context context){
-		Editor prefsEditor = getSharedPref(context).edit();
+		Editor prefsEditor = getPinNoteSharedPref(context).edit();
 		Gson note = new Gson();
-		Note o = new Note(0, "Note1");
-		String jsonStr = note.toJson(o);
+		
+		Note note_data[] = new Note[]{
+    			new Note("Hello"),
+    			new Note("Goodbye"),
+    			new Note("Huawei"),
+    			new Note("How Could you fall in love with him"),
+    			new Note("TerryGuy1001@gmail.com"),
+    			new Note("Ã÷ÌìÇÀ»ð³µÆ±"),
+    			};
+		String jsonStr = note.toJson(note_data);
 		Log.v("liny:", "jsonStr = "+jsonStr);
 		prefsEditor.putString("testNote", jsonStr);
 		prefsEditor.commit();
 		
+		
+	}
+	
+	public static Note[] TestRetrieveObject(Context context){
 		//get store data
-		String saveJson = sharedPref.getString("testNote","");
-		Note no = note.fromJson(saveJson, Note.class);
-		Log.v("liny:", "note : " + no.getmTitle());
+		Gson note = new Gson();
+		String saveJson = getPinNoteSharedPref(context).getString("testNote","");
+		Note note_data2[] = note.fromJson(saveJson, Note[].class);
+		Log.v("liny:", "note : " + note_data2[0].getmTitle());
+		
+		return note_data2;
 	}
 }

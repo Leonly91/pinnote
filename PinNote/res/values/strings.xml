@@ -35,5 +35,6 @@
     <string name="OK">OK</string>
     
     <string name="preference_file_key">com.example.pinnote.PREFERENCE_FILE_KEY_by_terry</string>
+    <string name="store_string">store_pinnote_</string>
 
 </resources>

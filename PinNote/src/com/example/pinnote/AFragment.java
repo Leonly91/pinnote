@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.pinnote.comm.ListViewItemLongClickIListener;
+import com.example.pinnote.db.DBUtil;
 
 import android.support.v4.app.Fragment;
 import android.content.Context;
@@ -41,19 +42,22 @@ public class AFragment extends Fragment {
         		data.add("data0:" + i);
         	}
         	
-        	Note note_data[] = new Note[]{
-        			new Note("Hello"),
-        			new Note("Goodbye"),
-        			new Note("Huawei"),
-        			new Note("How Could you fall in love with him"),
-        			new Note("TerryGuy1001@gmail.com"),
-        			new Note("明天抢火车票"),
-        			new Note("ThinkPad T430u")
-        			};
-        	
-        	NoteAdapter noteAdapter = new NoteAdapter(getActivity(), R.layout.mainlist_item_row, note_data);
-        	todoList.setAdapter(noteAdapter);
-        	
+//        	Note note_data[] = new Note[]{
+//        			new Note("Hello"),
+//        			new Note("Goodbye"),
+//        			new Note("Huawei"),
+//        			new Note("How Could you fall in love with him"),
+//        			new Note("TerryGuy1001@gmail.com"),
+//        			new Note("明天抢火车票"),
+//        			new Note("ThinkPad T430u")
+//        			};
+        	Note note_data[] = DBUtil.getTodoNoteArray(getActivity());
+        	if (null != note_data)
+        	{
+        		NoteAdapter noteAdapter = new NoteAdapter(getActivity(), R.layout.mainlist_item_row, note_data);
+        		noteAdapter.setNotifyOnChange(true);
+        		todoList.setAdapter(noteAdapter);
+        	}
 //    		todoList.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, data));
     	}
     }
