@@ -37,29 +37,38 @@ public class DBUtil {
 	public static boolean addNote(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
+			Editor prefsEditor = getPinNoteSharedPref(context).edit();
+			Gson gson = new Gson();
+			String noteListStoreName = "";
+			note.setType(type);
+			
 			switch(type){
 			case TODO:
 				note.setmId(generalId());
-				Editor prefsEditor = getPinNoteSharedPref(context).edit();
-				Gson gson = new Gson();
-				List<Note> note_data = DBUtil.getNoteList(context, "todolist");
-				if (note_data == null){
-					note_data = new ArrayList<Note>();
-					note_data.add(note);
-				}else{
-					note_data.add(note);
-				}
-				
-				String jsonStr = gson.toJson(note_data);
-				prefsEditor.putString("todolist", jsonStr);
-				prefsEditor.commit();
+				noteListStoreName = "todolist";
 				break;
 			case DOING:
+				noteListStoreName = "doinglist";
+				break;
 			case DONE:
+				noteListStoreName = "donelist";
+				break;
 			default:
 				ret = false;
 				break;
 			}
+			
+			List<Note> note_data = DBUtil.getNoteList(context, noteListStoreName);
+			if (note_data == null){
+				note_data = new ArrayList<Note>();
+				note_data.add(note);
+			}else{
+				note_data.add(note);
+			}
+			
+			String jsonStr = gson.toJson(note_data);
+			prefsEditor.putString(noteListStoreName, jsonStr);
+			prefsEditor.commit();
 		}catch(Exception ex){
 			Log.e("DBUtil call saveNote failed:", ex.getMessage());
 			ret = false;
@@ -80,8 +89,10 @@ public class DBUtil {
 				break;
 			case DOING:
 				noteListStoreName = "doinglist";
+				break;
 			case DONE:
 				noteListStoreName = "donelist";
+				break;
 			default:
 				break;
 			}
@@ -97,7 +108,7 @@ public class DBUtil {
 			}
 			
 			String jsonStr = gson.toJson(note_data);
-			prefsEditor.putString("todolist", jsonStr);
+			prefsEditor.putString(noteListStoreName, jsonStr);
 			prefsEditor.commit();
 		}catch(Exception ex){
 			Log.e("DBUtil call saveNote failed:", ex.getMessage());
@@ -106,12 +117,11 @@ public class DBUtil {
 		return true;
 	}
 	
-	public static boolean updateNote(Note note, NoteType type){
+	public static boolean updateNoteType(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
-			switch(type){
-			
-			}
+			DBUtil.delNote(context, note.getmId(), note.getType());
+			DBUtil.addNote(context, note, type);
 		}catch(Exception ex){
 			Log.e("DBUtil call updateNote failed:", ex.getMessage());
 			ret = false;
@@ -146,6 +156,14 @@ public class DBUtil {
 			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());
 		}
 		return noteList;
+	}
+	
+	public static Note[] getDoneNoteArray(Context context){
+		return DBUtil.getNoteArray(context, "donelist");
+	}
+	
+	public static Note[] getDoingNoteArray(Context context){
+		return DBUtil.getNoteArray(context, "doinglist");
 	}
 	
 	public static Note[] getTodoNoteArray(Context context){

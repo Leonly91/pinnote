@@ -3,6 +3,10 @@ package com.example.pinnote;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.pinnote.comm.BListViewItemLCListener;
+import com.example.pinnote.comm.NoteType;
+import com.example.pinnote.db.DBUtil;
+
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,17 +23,25 @@ import android.widget.ListView;
  * To change this template use File | Settings | File Templates.
  */
 public class BFragment extends Fragment {
-	private ListView todoList;
+	private ListView doingList;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
     	View view = inflater.inflate(R.layout.second, container, false);
-    	todoList = (ListView)view.findViewById(R.id.doingList);
-    	if (todoList != null){
-    		List<String> data = new ArrayList<String>();
-        	for (int i = 0; i < 20; i++) {
-        		data.add("data1:" + i);
-        	}
-    		todoList.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, data));
-    	}
+    	fillListData(view);
         return view;
+    }
+    
+    private void fillListData(View view){
+    	doingList = (ListView)view.findViewById(R.id.doingList);
+    	doingList.setOnItemLongClickListener(new BListViewItemLCListener(doingList, NoteType.DOING, getActivity()));
+    	
+    	if (doingList != null){
+    		Note note_data[] = DBUtil.getDoingNoteArray(getActivity());
+        	if (null != note_data)
+        	{
+        		NoteAdapter noteAdapter = new NoteAdapter(getActivity(), R.layout.mainlist_item_row, note_data);
+        		noteAdapter.setNotifyOnChange(true);
+        		doingList.setAdapter(noteAdapter);
+        	}
+    	}
     }
 }

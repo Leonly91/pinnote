@@ -3,7 +3,8 @@ package com.example.pinnote;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.pinnote.comm.ListViewItemLongClickIListener;
+import com.example.pinnote.comm.AListViewItemLCListener;
+import com.example.pinnote.comm.NoteType;
 import com.example.pinnote.db.DBUtil;
 
 import android.support.v4.app.Fragment;
@@ -34,13 +35,13 @@ public class AFragment extends Fragment {
     
     private void fillListData(View view){
     	todoList = (ListView)view.findViewById(R.id.todoList);
-    	todoList.setOnItemLongClickListener(new ListViewItemLongClickIListener(todoList, getActivity()));
+    	todoList.setOnItemLongClickListener(new AListViewItemLCListener(todoList, NoteType.TODO, getActivity()));
     	
     	if (todoList != null){
-    		List<String> data = new ArrayList<String>();
-        	for (int i = 0; i < 20; i++) {
-        		data.add("data0:" + i);
-        	}
+//    		List<String> data = new ArrayList<String>();
+//        	for (int i = 0; i < 20; i++) {
+//        		data.add("data0:" + i);
+//        	}
         	
 //        	Note note_data[] = new Note[]{
 //        			new Note("Hello"),
@@ -58,7 +59,6 @@ public class AFragment extends Fragment {
         		noteAdapter.setNotifyOnChange(true);
         		todoList.setAdapter(noteAdapter);
         	}
-//    		todoList.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, data));
     	}
     }
 }
