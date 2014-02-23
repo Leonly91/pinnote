@@ -1,5 +1,7 @@
 package com.example.pinnote.comm;
 
+import java.util.Arrays;
+
 import com.example.pinnote.Note;
 import com.example.pinnote.NoteAdapter;
 import com.example.pinnote.R;
@@ -41,12 +43,14 @@ public class AListViewItemLCListener extends ListViewItemLongClickBaseListener{
 		Button viewBtn = (Button)dialog.findViewById(R.id.delBtn);
 		Button cancelBtn = (Button)dialog.findViewById(R.id.cancelBtn);
 		Button doneBtn = (Button)dialog.findViewById(R.id.doneBtn);
+		Button fileBtn = (Button)dialog.findViewById(R.id.fileNoteBtn);
 		OnClickListener itemBtnOnClickListener = new AItemBtnClickListener(dialog, note);
 		pinBtn.setOnClickListener(itemBtnOnClickListener);
 		doBtn.setOnClickListener(itemBtnOnClickListener);
 		viewBtn.setOnClickListener(itemBtnOnClickListener);
 		cancelBtn.setOnClickListener(itemBtnOnClickListener);
 		doneBtn.setVisibility(View.GONE);
+		fileBtn.setVisibility(View.GONE);
 	}
 	
 	class AItemBtnClickListener implements OnClickListener
@@ -71,6 +75,20 @@ public class AListViewItemLCListener extends ListViewItemLongClickBaseListener{
 			case R.id.pinBtn:
 				//pinNote(noteId)
 				break;
+			case R.id.doBtn:
+				DBUtil.updateNoteType(context, note, NoteType.DOING);
+				
+				//update todolist data
+				note_data = DBUtil.getTodoNoteArray(context);
+	        	if (null != note_data)
+				{
+	        		NoteAdapter noteAdapter = new NoteAdapter(context, R.layout.mainlist_item_row, note_data);
+	        		noteAdapter.setNotifyOnChange(true);
+	        		listView.setAdapter(noteAdapter);
+				}
+				dialog.dismiss();
+				break;
+				
 			case R.id.delBtn:
 				DBUtil.delNote(context, note.getmId(), note.getType());
 				
@@ -82,20 +100,6 @@ public class AListViewItemLCListener extends ListViewItemLongClickBaseListener{
 	        		noteAdapter.setNotifyOnChange(true);
 	        		listView.setAdapter(noteAdapter);
 	        		Toast.makeText(dialog.getContext(), "É¾³ý³É¹¦", Toast.LENGTH_SHORT).show();
-				}
-	        	
-				dialog.dismiss();
-				break;
-			case R.id.doBtn:
-				DBUtil.updateNoteType(context, note, NoteType.DOING);
-				
-				//switch to doing listview tab
-				note_data = DBUtil.getTodoNoteArray(context);
-	        	if (null != note_data)
-				{
-	        		NoteAdapter noteAdapter = new NoteAdapter(context, R.layout.mainlist_item_row, note_data);
-	        		noteAdapter.setNotifyOnChange(true);
-	        		listView.setAdapter(noteAdapter);
 				}
 	        	
 				dialog.dismiss();

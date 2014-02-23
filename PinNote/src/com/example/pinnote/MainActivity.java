@@ -3,6 +3,7 @@ package com.example.pinnote;//test for git
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.pinnote.comm.ViewInlineFragment;
 import com.example.pinnote.db.*;
 
 import android.os.Bundle;
@@ -88,6 +89,12 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                
+                //refresh list data
+                ViewInlineFragment fragment = (ViewInlineFragment)getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewPager+":"+position);
+                if (fragment != null){
+                	fragment.refreshListData();
+                }
             }
 
             @Override
@@ -142,20 +149,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
     
-    private void initListData(){
-    	List<String> data = new ArrayList<String>();
-    	for (int i = 0; i < 20; i++) {
-    		data.add("data:" + i);
-    	}
-    	mTodoListView = (ListView)viewPager.findViewById(R.id.todoList);
-        if (null != mTodoListView){
-        	mTodoListView.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, data));
-        }
-    	
-    }
-
-	
-	public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu){
         //super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         return true;

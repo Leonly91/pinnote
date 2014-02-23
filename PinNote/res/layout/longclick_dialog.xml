@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    style="@style/rounded_corner_dialog">"
+    style="@style/rounded_corner_dialog">
 
     <Button
         android:id="@+id/pinBtn"
@@ -32,6 +32,13 @@
         android:layout_height="40dp"
         android:gravity="center_horizontal"
         android:text="Done"
+        android:layout_marginTop="10dp"/>
+    
+    <Button android:id="@+id/fileNoteBtn" 
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:text="File"
         android:layout_marginTop="10dp"/>
     
     <Button android:id="@+id/cancelBtn" 

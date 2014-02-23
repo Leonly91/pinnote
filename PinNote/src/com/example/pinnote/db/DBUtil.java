@@ -1,6 +1,8 @@
 package com.example.pinnote.db;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,10 +35,18 @@ public class DBUtil {
 			return context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 	}
 	
+	public static boolean getNote(Context context, Note note, NoteType type){
+		boolean ret = true;
+		return ret;
+	}
 	
 	public static boolean addNote(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			String createTime = sf.format(new Date());
+			note.setCreateTime(createTime);
+			
 			Editor prefsEditor = getPinNoteSharedPref(context).edit();
 			Gson gson = new Gson();
 			String noteListStoreName = "";
@@ -176,6 +186,9 @@ public class DBUtil {
 			Gson note = new Gson();
 			String saveJson = getPinNoteSharedPref(context).getString(key,"");
 			Note note_data[] = note.fromJson(saveJson, Note[].class);
+			if (note_data != null){
+				Arrays.sort(note_data);
+			}
 			return note_data;
 		}catch(Exception ex){
 			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());

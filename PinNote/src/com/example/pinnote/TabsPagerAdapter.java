@@ -3,6 +3,7 @@ package com.example.pinnote;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +19,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override    
     public Fragment getItem(int i) {
+//    	Log.v("liny:", "TabsPagerAdapter getItem :" + i);
         switch(i){
             case 0:
                 return new AFragment();

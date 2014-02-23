@@ -2,7 +2,7 @@ package com.example.pinnote;
 
 import com.example.pinnote.comm.NoteType;
 
-public class Note {
+public class Note implements Comparable{
 	private String mId;
 	private int mLevel;
 	private int mImageIcon;
@@ -11,6 +11,7 @@ public class Note {
 	private String mAlarm;
 	private String mDeadLine;
 	private NoteType type;
+	private String createTime;
 	
 	public Note(int mImageIcon, String mTitle){
 		this.mTitle = mTitle;
@@ -85,6 +86,27 @@ public class Note {
 
 	public void setmImageIcon(int mImageIcon) {
 		this.mImageIcon = mImageIcon;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	@Override
+	public int compareTo(Object obj) {
+		// TODO Auto-generated method stub
+		int cmp = getmId().compareToIgnoreCase(((Note)obj).getmId());
+		if (cmp > 0){
+			return -1;
+		}
+		else if(cmp < 0){
+			return 1;
+		}
+		return 0;
 	}
 	
 	

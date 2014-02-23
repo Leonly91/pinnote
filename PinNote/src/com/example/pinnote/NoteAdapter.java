@@ -48,7 +48,7 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 		Note note = data[position];
 		holder.txtTitle.setText(note.getmTitle());
 		GradientDrawable backgroundGradient = (GradientDrawable)holder.imgIcon.getBackground();
-		backgroundGradient.setColor(context.getResources().getColor(R.color.yellow_alarm));
+		backgroundGradient.setColor(context.getResources().getColor(R.color.green_normal));
 		
 		return row;
 	}
