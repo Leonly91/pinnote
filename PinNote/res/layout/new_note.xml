@@ -58,11 +58,12 @@
 		        android:layout_height="wrap_content"
 		        android:orientation="horizontal" >
 			    
-			    <Button android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+			    <Button android:layout_width="32dp"
+			        android:layout_height="32dp"
 			        android:layout_marginTop="0dp"
 			        android:id="@+id/showTimePickerBtn"
-			        android:text="完成时间"/>
+			        android:background="@drawable/ic_time"
+			        />
 			    
 			    <Button android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"

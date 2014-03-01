@@ -3,12 +3,18 @@ package com.example.pinnote;
 import java.util.Calendar;
 
 import com.example.pinnote.comm.NoteType;
+import com.example.pinnote.comm.TimeAlarm;
+import com.example.pinnote.comm.Util;
 import com.example.pinnote.comm.ViewInlineFragment;
 import com.example.pinnote.db.DBUtil;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -46,6 +52,7 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 	private int day;
 	private int hour;
 	private int minute;
+	private int alarmMode;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -68,8 +75,10 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 			}
 		}
 		
-		Button button = (Button)findViewById(R.id.showTimePickerBtn);
-		button.setOnClickListener(this);
+		Button showTimePickerBtn = (Button)findViewById(R.id.showTimePickerBtn);
+		showTimePickerBtn.setOnClickListener(this);
+		Button alarmMeBtn = (Button)findViewById(R.id.alarmMeBtn);
+		alarmMeBtn.setOnClickListener(this);
 		
 		Calendar calendar = Calendar.getInstance();  
         year = calendar.get(Calendar.YEAR);  
@@ -185,6 +194,37 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 			
 			break;
 		case R.id.alarmMeBtn:
+			
+			//Util.createScheduledNotification(note, this);
+			
+			//show notification
+//			String str = "Notification";
+//			int icon = R.drawable.ic_launcher;
+//			long when = System.currentTimeMillis() + 1000;
+//			Notification noti =new Notification.Builder(this)
+//					.setContentTitle(str)
+//					.setSmallIcon(icon)
+//					.setContentText("notification text").build();
+//			noti.flags = Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_SHOW_LIGHTS;
+//			noti.defaults = Notification.DEFAULT_SOUND;
+//			noti.when = when;
+//			
+//			NotificationManager mnotiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+//			mnotiManager.notify(0, noti);
+			
+			Calendar calendar = Calendar.getInstance();
+			
+			Intent intent  = new Intent(AddNoteActivity.this, TimeAlarm.class);
+			intent.putExtra("note_title", "NoteTitle");
+			intent.putExtra("note_content", "NoteContent");
+			
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNoteActivity.this, 0, intent, 0);
+			
+			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+			int alarmType = AlarmManager.RTC;//ELAPSED_REALTIME_WAKEUP;
+			alarmManager.set(alarmType, calendar.getTimeInMillis()+1000, pendingIntent);//after one second
+			
+			Log.v("liny:", "Set a AlarmManager");
 			
 			break;
 		default:
