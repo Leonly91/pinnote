@@ -70,7 +70,7 @@
 			        android:layout_marginTop="0dp"
 			        android:layout_marginLeft="20dp"
 			        android:id="@+id/alarmMeBtn"
-			        android:text="提醒我"/>
+			        android:text="@string/alarmMe"/>
 		    
 		    </LinearLayout>
 		    

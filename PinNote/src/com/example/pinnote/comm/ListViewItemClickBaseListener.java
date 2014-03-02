@@ -31,6 +31,7 @@ public class ListViewItemClickBaseListener implements OnItemClickListener {
 		Intent intent = new Intent();
     	intent.setClass(context, AddNoteActivity.class);
     	intent.putExtra("editNoteId", note.getmId());
+    	intent.putExtra("editNoteType", NoteType.TODO.ordinal());
     	context.startActivity(intent);
     	((FragmentActivity)context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 		

@@ -36,5 +36,8 @@
     
     <string name="preference_file_key">com.example.pinnote.PREFERENCE_FILE_KEY_by_terry</string>
     <string name="store_string">store_pinnote_</string>
+    
+    <string name="alarmMe">提醒我</string>
+    <string name="cancelAlarmMe">取消提醒</string>
 
 </resources>

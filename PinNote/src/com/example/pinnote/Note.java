@@ -12,6 +12,7 @@ public class Note implements Comparable{
 	private String mDeadLine;
 	private NoteType type;
 	private String createTime;
+	private int alarmFlag;
 	
 	public Note(int mImageIcon, String mTitle){
 		this.mTitle = mTitle;
@@ -94,6 +95,14 @@ public class Note implements Comparable{
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	public int getAlarmFlag() {
+		return alarmFlag;
+	}
+
+	public void setAlarmFlag(int alarmFlag) {
+		this.alarmFlag = alarmFlag;
 	}
 
 	@Override

@@ -41,11 +41,14 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 	private EditText m_noteTitleEdit;
 	private EditText m_noteContentEdit;
 	private ActionBar actionBar;
+	private Note crntNote;
 	
 	private DatePicker datePicker;
 	private TimePicker timePicker;
+	private Button alarmMeBtn;
 	
 	private Dialog timeDialog;
+	private boolean editMode;
 	
 	private int year;
 	private int month;
@@ -58,6 +61,10 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_note);
 		
+		editMode = false;
+		crntNote = new Note("");
+		crntNote.setAlarmFlag(0);
+		
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -68,16 +75,38 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 		
 		m_noteContentEdit = (EditText)findViewById(R.id.new_event_content);
 		
+        TextView timeView = (TextView)findViewById(R.id.endTimeText);
+        timeView.setVisibility(View.GONE);
+        alarmMeBtn = (Button)findViewById(R.id.alarmMeBtn);
+		
 		Intent intent = this.getIntent();
 		if (intent != null){
 			String noteId = intent.getStringExtra("editNoteId");
+			NoteType noteType = NoteType.values()[intent.getIntExtra("editNoteType",0)];
+			
 			if (noteId != null){
+				editMode = true;
+				Note note = DBUtil.getNote(this, noteId, noteType);
+				if (note != null){
+					m_noteTitleEdit.setText(note.getmTitle());
+					m_noteContentEdit.setText(note.getmContent());
+					
+					if (note.getmDeadLine() != ""){
+						timeView.setText(note.getmDeadLine());
+						timeView.setVisibility(View.VISIBLE);
+					}
+					if (note.getAlarmFlag() == 1){
+						crntNote.setAlarmFlag(1);
+						alarmMeBtn.setText(R.string.cancelAlarmMe);
+					}
+					
+					crntNote = note;
+				}
 			}
 		}
 		
 		Button showTimePickerBtn = (Button)findViewById(R.id.showTimePickerBtn);
 		showTimePickerBtn.setOnClickListener(this);
-		Button alarmMeBtn = (Button)findViewById(R.id.alarmMeBtn);
 		alarmMeBtn.setOnClickListener(this);
 		
 		Calendar calendar = Calendar.getInstance();  
@@ -86,9 +115,7 @@ public class AddNoteActivity extends Activity implements OnClickListener{
         day = calendar.get(Calendar.DAY_OF_MONTH);  
         hour = calendar.get(Calendar.HOUR);  
         minute = calendar.get(Calendar.MINUTE);
-        
-        TextView timeView = (TextView)findViewById(R.id.endTimeText);
-        timeView.setVisibility(View.GONE);
+
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -112,14 +139,25 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 		case R.id.newOKBtn:
 			
 			Note note = new Note(m_noteTitleEdit.getText().toString());
-			note.setType(NoteType.TODO);
+			note.setmContent(m_noteContentEdit.getText().toString());
 			if (endTime != null && endTime != ""){
 				note.setmDeadLine(endTime+":00");
 			}
-			if (!DBUtil.addNote(this, note, NoteType.TODO))
-			{
-				Log.e("liny:", "add note fail");
+			note.setAlarmFlag(crntNote.getAlarmFlag());
+			if (editMode == true){
+				
 			}
+			else {
+				note.setType(NoteType.TODO);
+				if (!DBUtil.addNote(this, note, NoteType.TODO)){
+					Log.e("liny:", "add note fail");
+				}
+			}
+			if (note.getAlarmFlag() == 1)
+			{
+				Util.sendNotification(this, note);
+			}
+			
 		    Intent intent = new Intent(this, MainActivity.class);
 		    AddNoteActivity.this.startActivity(intent);
 			this.finish();
@@ -194,8 +232,17 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 			
 			break;
 		case R.id.alarmMeBtn:
+			int alarmMeBtnText;
 			
-			//Util.createScheduledNotification(note, this);
+			if (crntNote.getAlarmFlag() == 0 ){
+				alarmMeBtnText = R.string.cancelAlarmMe;
+				crntNote.setAlarmFlag(1);
+			}
+			else{
+				alarmMeBtnText = R.string.alarmMe;
+				crntNote.setAlarmFlag(0);
+			}
+			alarmMeBtn.setText(alarmMeBtnText);
 			
 			//show notification
 //			String str = "Notification";
@@ -212,19 +259,18 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 //			NotificationManager mnotiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 //			mnotiManager.notify(0, noti);
 			
-			Calendar calendar = Calendar.getInstance();
 			
-			Intent intent  = new Intent(AddNoteActivity.this, TimeAlarm.class);
-			intent.putExtra("note_title", "NoteTitle");
-			intent.putExtra("note_content", "NoteContent");
-			
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNoteActivity.this, 0, intent, 0);
-			
-			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-			int alarmType = AlarmManager.RTC;//ELAPSED_REALTIME_WAKEUP;
-			alarmManager.set(alarmType, calendar.getTimeInMillis()+1000, pendingIntent);//after one second
-			
-			Log.v("liny:", "Set a AlarmManager");
+//			Calendar calendar = Calendar.getInstance();
+//			
+//			Intent intent  = new Intent(AddNoteActivity.this, TimeAlarm.class);
+//			intent.putExtra("note_title", "NoteTitle");
+//			intent.putExtra("note_content", "NoteContent");
+//			
+//			PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNoteActivity.this, 0, intent, 0);
+//			
+//			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//			int alarmType = AlarmManager.RTC;//ELAPSED_REALTIME_WAKEUP;
+//			alarmManager.set(alarmType, calendar.getTimeInMillis()+3000, pendingIntent);//after one second
 			
 			break;
 		default:

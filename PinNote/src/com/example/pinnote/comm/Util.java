@@ -6,8 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
+import com.example.pinnote.AddNoteActivity;
 import com.example.pinnote.Note;
 import com.example.pinnote.R;
 
@@ -81,11 +84,20 @@ public class Util {
 		return retColor;
 	}
 	
-	/*  */
-	public static void createScheduledNotification(Note note, Context context){
+	public static void sendNotification(Context context, Note note){
+		Calendar calendar = Calendar.getInstance();
+		Date date  = parsetoDate(note.getmDeadLine());
+		calendar.setTime(date);
+		long alarmWhen = calendar.getTimeInMillis() - 60*1000;//alarm right that
+		
+		Intent intent  = new Intent(context, TimeAlarm.class);
+		intent.putExtra("note_title", note.getmTitle());
+		intent.putExtra("note_content", note.getmContent());
+		
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+		
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-		int id = (int) System.currentTimeMillis();
-
-
+		int alarmType = AlarmManager.RTC;//ELAPSED_REALTIME_WAKEUP;
+		alarmManager.set(alarmType, alarmWhen, pendingIntent);
 	}
 }

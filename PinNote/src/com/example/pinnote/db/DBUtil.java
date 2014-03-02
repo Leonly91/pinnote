@@ -27,7 +27,6 @@ public class DBUtil {
 		
 		String key = String.valueOf(date.getTime()) + "_" + keyId;
 		
-		Log.v("liny:key= ", key);
 		return key;
 	}
 	
@@ -35,9 +34,34 @@ public class DBUtil {
 			return context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 	}
 	
-	public static boolean getNote(Context context, Note note, NoteType type){
-		boolean ret = true;
-		return ret;
+	public static Note getNote(Context context, String noteId, NoteType type){
+		Note note = null;
+		String noteListStoreName = "";
+		switch(type){
+		case TODO:
+			noteListStoreName = "todolist";
+			break;
+		case DOING:
+			noteListStoreName = "doinglist";
+			break;
+		case DONE:
+			noteListStoreName = "donelist";
+			break;
+		default:
+			return null;
+		}
+		
+		List<Note> note_data = DBUtil.getNoteList(context, noteListStoreName);
+		if (note_data != null){
+			for(Note nt : note_data){
+				if (nt.getmId().equals(noteId)){
+					note = nt;
+					break;
+				}
+			}
+		}
+		
+		return note;
 	}
 	
 	public static boolean addNote(Context context, Note note, NoteType type){
@@ -127,6 +151,51 @@ public class DBUtil {
 		return true;
 	}
 	
+	public static boolean updateNote(Context context, Note note){
+		boolean ret = true;
+		try{
+			Note n;
+			Editor prefsEditor = getPinNoteSharedPref(context).edit();
+			Gson gson = new Gson();
+			List<Note> note_data = null;
+			String noteListStoreName = "";
+			
+			switch (note.getType()){
+			case TODO:
+				noteListStoreName = "todolist";
+				break;
+			case DOING:
+				noteListStoreName = "doinglist";
+				break;
+			case DONE:
+				noteListStoreName = "donelist";
+				break;
+			default:
+				break;
+			}
+			
+			note_data = DBUtil.getNoteList(context, noteListStoreName);
+			if (note_data != null){
+				for (int i = 0; i < note_data.size(); i++){
+					if (note_data.get(i).getmId().equals(note.getmId())){
+						n = note_data.get(i);
+						break;
+					}
+				}
+			}
+			
+			//upate note data
+			
+			
+			String jsonStr = gson.toJson(note_data);
+			prefsEditor.putString(noteListStoreName, jsonStr);
+			prefsEditor.commit();
+		}catch(Exception ex){
+			Log.e("DBUtil call saveNote failed:", ex.getMessage());
+			return false;
+		}
+		return ret;
+	}
 	public static boolean updateNoteType(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
