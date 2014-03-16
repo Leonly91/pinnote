@@ -9,6 +9,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.pinnote.AddNoteActivity;
 import com.example.pinnote.Note;
@@ -20,12 +21,65 @@ public class Util {
 		SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		Date date = null;
 		try {
-			date = format.parse(string);
+			if (null != string)
+			{
+				date = format.parse(string);
+			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return date;
+	}
+	
+	public static int getDayOfTime(String time){
+		Date date = parsetoDate(time);
+		if (date == null){
+			return -1;
+		}
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(date);
+		
+		int day = calendar.get(Calendar.DAY_OF_WEEK);
+		
+		return day;
+	}
+	
+	public static int getYearOfTime(String time){
+		Date date = parsetoDate(time);
+		if (date == null){
+			return -1;
+		}
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(date);
+		
+		int year = calendar.get(Calendar.YEAR);
+		
+		return year;
+	}
+	
+	public static String getShortTimeStr(String time){
+		Date date = parsetoDate(time);
+		if (date == null){
+			return null;
+		}
+		
+		String shortTime = null;
+		Calendar calendar = Calendar.getInstance();  
+		int currentYear = calendar.get(Calendar.YEAR);  
+		
+		calendar.setTime(date);
+		
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		
+		shortTime = (month + 1) + "/" + day;
+		if (year != currentYear){
+			shortTime = year + "/" + shortTime;
+		}
+		
+		return shortTime;
 	}
 	
 	public static long getMinutes(Date date){
@@ -54,20 +108,31 @@ public class Util {
          * 4. 以分钟为单位 */
         long millisNow = calendar.getTimeInMillis();
         
-        Date endDate = Util.parsetoDate(note.getmDeadLine());
+        String deadLine = note.getmDeadLine();
+        String createTimeStr = note.getCreateTime();
+        if ((null == deadLine) || deadLine.equals("") ||
+        		(null == createTimeStr) || createTimeStr.equals(""))
+        {
+        	return retColor;
+        }
+        Log.v("Util:", "deadLine:"+deadLine+",createTime"+createTimeStr);
+        
+        Date endDate = Util.parsetoDate(deadLine);
         calendar.setTime(endDate);
 		long millisEnd = calendar.getTimeInMillis();
 		
-        Date createDate = Util.parsetoDate(note.getCreateTime());
+        Date createDate = Util.parsetoDate(createTimeStr);
         calendar.setTime(createDate);
         long millisCreate =  calendar.getTimeInMillis();
         
-        long percent = 1;
+        double percent = 1;
+//      Log.v("Util:", "millisNow:"+millisNow+", millisCreate:"+millisCreate+", millisEnd:"+millisEnd);
         if (millisNow > millisCreate)
         {
-        	percent = (millisEnd - millisCreate)/(millisNow - millisCreate);
+        	percent = ((double)(millisNow - millisCreate)/(double)(millisEnd - millisCreate));
         }
         percent *= 100;
+        Log.v("Util:", "percent:"+percent);
         if (percent < 20){
         	retColor = R.color.green_normal;
         }else if (percent < 40){
@@ -88,7 +153,7 @@ public class Util {
 		Calendar calendar = Calendar.getInstance();
 		Date date  = parsetoDate(note.getmDeadLine());
 		calendar.setTime(date);
-		long alarmWhen = calendar.getTimeInMillis() - 60*1000;//alarm right that
+		long alarmWhen = calendar.getTimeInMillis();//alarm right that
 		
 		Intent intent  = new Intent(context, TimeAlarm.class);
 		intent.putExtra("note_title", note.getmTitle());

@@ -100,7 +100,7 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 						alarmMeBtn.setText(R.string.cancelAlarmMe);
 					}
 					
-					crntNote = note;
+					crntNote = note.getCopyObject();
 				}
 			}
 		}
@@ -137,25 +137,25 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 			overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
 			break;
 		case R.id.newOKBtn:
-			
-			Note note = new Note(m_noteTitleEdit.getText().toString());
-			note.setmContent(m_noteContentEdit.getText().toString());
+			crntNote.setmTitle(m_noteTitleEdit.getText().toString());
+			crntNote.setmContent(m_noteContentEdit.getText().toString());
 			if (endTime != null && endTime != ""){
-				note.setmDeadLine(endTime+":00");
+				crntNote.setmDeadLine(endTime+":00");
 			}
-			note.setAlarmFlag(crntNote.getAlarmFlag());
 			if (editMode == true){
-				
+				if (!DBUtil.updateNote(this, crntNote)){
+					Log.e("liny:", "update note fail");
+				}
 			}
 			else {
-				note.setType(NoteType.TODO);
-				if (!DBUtil.addNote(this, note, NoteType.TODO)){
+				crntNote.setType(NoteType.TODO);
+				if (!DBUtil.addNote(this, crntNote, NoteType.TODO)){
 					Log.e("liny:", "add note fail");
 				}
 			}
-			if (note.getAlarmFlag() == 1)
+			if (crntNote.getAlarmFlag() == 1)
 			{
-				Util.sendNotification(this, note);
+				Util.sendNotification(this, crntNote);
 			}
 			
 		    Intent intent = new Intent(this, MainActivity.class);

@@ -2,7 +2,7 @@ package com.example.pinnote;
 
 import com.example.pinnote.comm.NoteType;
 
-public class Note implements Comparable{
+public class Note implements Comparable, Cloneable{
 	private String mId;
 	private int mLevel;
 	private int mImageIcon;
@@ -118,5 +118,18 @@ public class Note implements Comparable{
 		return 0;
 	}
 	
+	protected Object clone() throws CloneNotSupportedException{
+		return super.clone();
+	}
 	
+	public Note getCopyObject(){
+		Note note = null;
+		try {
+			note = (Note)this.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return note;
+	}
 }

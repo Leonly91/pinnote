@@ -1,9 +1,12 @@
 package com.example.pinnote;
 
 
+import com.example.pinnote.comm.Util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +38,10 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 			row = inflater.inflate(layoutResourceId, null);
 			
 			holder = new NoteHolder();
-			holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
-			holder.txtTitle = (TextView)row.findViewById(R.id.noteText);
-			holder.endTime = (TextView)row.findViewById(R.id.endTime);
+			holder.imgIcon   = (ImageView)row.findViewById(R.id.imgIcon);
+			holder.txtTitle  = (TextView)row.findViewById(R.id.noteText);
+			holder.endTime   = (TextView)row.findViewById(R.id.endTime);
+			holder.alarmIcon = (ImageView)row.findViewById(R.id.smlAlarmIcon);
 			
 			row.setTag(holder);
 		}
@@ -48,7 +52,17 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 		Note note = data[position];
 		holder.txtTitle.setText(note.getmTitle());
 		GradientDrawable backgroundGradient = (GradientDrawable)holder.imgIcon.getBackground();
-		backgroundGradient.setColor(context.getResources().getColor(R.color.green_normal));
+		backgroundGradient.setColor(context.getResources().getColor(Util.getColorRscByTime(note)));
+//		backgroundGradient.setColor(context.getResources().getColor(R.color.green_normal));
+		if (note.getAlarmFlag() == 1){
+			holder.alarmIcon.setVisibility(View.VISIBLE);
+		}else{
+			holder.alarmIcon.setVisibility(View.GONE);
+		}
+		String shortTime = Util.getShortTimeStr(note.getmDeadLine());
+		if (null != shortTime){			
+			holder.endTime.setText(shortTime);
+		}
 		
 		return row;
 	}
@@ -58,5 +72,6 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 		ImageView imgIcon;
         TextView txtTitle;
         TextView endTime;
+        ImageView alarmIcon;
     }
 }

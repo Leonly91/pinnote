@@ -67,9 +67,10 @@ public class DBUtil {
 	public static boolean addNote(Context context, Note note, NoteType type){
 		boolean ret = true;
 		try{
-			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createTime = sf.format(new Date());
 			note.setCreateTime(createTime);
+//			Log.v("DBUtil", "createTime:"+createTime);
 			
 			Editor prefsEditor = getPinNoteSharedPref(context).edit();
 			Gson gson = new Gson();
@@ -171,6 +172,7 @@ public class DBUtil {
 				noteListStoreName = "donelist";
 				break;
 			default:
+				Log.e("liny:", "updateNote. unknown note type");
 				break;
 			}
 			
@@ -178,20 +180,20 @@ public class DBUtil {
 			if (note_data != null){
 				for (int i = 0; i < note_data.size(); i++){
 					if (note_data.get(i).getmId().equals(note.getmId())){
-						n = note_data.get(i);
+						note_data.remove(i);
 						break;
 					}
 				}
+				//upate note data
+				n = note.getCopyObject();
+				note_data.add(n);
 			}
-			
-			//upate note data
-			
 			
 			String jsonStr = gson.toJson(note_data);
 			prefsEditor.putString(noteListStoreName, jsonStr);
 			prefsEditor.commit();
 		}catch(Exception ex){
-			Log.e("DBUtil call saveNote failed:", ex.getMessage());
+			Log.e("DBUtil call updateNote failed:", ex+"");
 			return false;
 		}
 		return ret;
@@ -218,7 +220,7 @@ public class DBUtil {
 			prefsEditor.putString(R.string.store_string + key, jsonStr);
 			prefsEditor.commit();
 		}catch(Exception ex){
-			Log.e("DBUtil call saveList failed:", ex.getMessage());
+			Log.e("DBUtil call saveList failed:", ex+"");
 			ret = false;
 		}
 		return ret;
@@ -232,7 +234,7 @@ public class DBUtil {
 			noteList = note.fromJson(saveJson, new TypeToken<List<Note>>(){}.getType());
 			return noteList;
 		}catch(Exception ex){
-			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());
+			Log.e("DBUtil call getNoteArray failed:", ex+"");
 		}
 		return noteList;
 	}
@@ -260,7 +262,7 @@ public class DBUtil {
 			}
 			return note_data;
 		}catch(Exception ex){
-			Log.e("DBUtil call getNoteArray failed:", ex.getMessage());
+			Log.e("DBUtil call getNoteArray failed:", ex+"");
 		}
 		return ret;
 	}

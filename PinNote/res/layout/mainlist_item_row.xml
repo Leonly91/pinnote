@@ -25,13 +25,22 @@
 	        android:layout_marginTop="8dp"
 	        android:layout_marginBottom="5dp"
 	        android:layout_marginLeft="10dp"
-	        android:layout_weight="10"/>
+	        android:layout_weight="10"
+	        />
+	    
+	    <ImageView android:id="@+id/smlAlarmIcon"
+	        android:layout_width="24dp"
+	        android:layout_height="23dp"
+	        android:src="@drawable/alarm"
+	        android:paddingRight="5dp"
+	        android:contentDescription="alarm"/>
 	    
 	    <TextView android:id="@+id/endTime"
-	        android:layout_width="0dp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="2d"/>
+	        android:gravity="right"
+	        android:textAlignment="gravity"
+	        android:text=""/>
 	</LinearLayout>
 
 
