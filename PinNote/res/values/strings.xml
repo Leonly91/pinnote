@@ -4,7 +4,8 @@
     <string name="app_name">PinNotes</string>
     <string name="add_event">添加</string>
     <string name="see_all_event">查看归档</string>
-    <string name="help">帮助</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
 
@@ -40,4 +41,13 @@
     <string name="alarmMe">提醒我</string>
     <string name="cancelAlarmMe">取消提醒</string>
 
+    <string-array name="day_items">
+        <item>星期日</item>
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+    </string-array>
 </resources>

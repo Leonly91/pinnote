@@ -2,6 +2,7 @@ package com.example.pinnote.comm;
 
 import com.example.pinnote.R;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Window;
+import android.widget.TextView;
 
 public class TimeAlarm extends BroadcastReceiver {
 	
@@ -29,10 +32,22 @@ public class TimeAlarm extends BroadcastReceiver {
         noti.flags = Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_SHOW_LIGHTS;
         noti.defaults = Notification.DEFAULT_SOUND;
         
-//        PendingIntent contentIntent = PendingIntent.getActivity(context,
-//                1, new Intent(context, TimeAlarm.class),0);
-        
         manger.notify(1, noti);
+	}
+	
+	/* µ¯´°¶Ô»°¿ò */
+	private void showAlertDialog(Intent intent){
+		String titleStr = intent.getStringExtra("note_title");
+		String contentStr = intent.getStringExtra("note_content");
+		
+		Dialog alertDialog = new Dialog(context);
+		alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		alertDialog.setContentView(R.layout.alertmanager_dialog);
+		
+		TextView tv = (TextView)alertDialog.findViewById(R.id.alert_dialog_title);
+		tv.setText(titleStr);
+		
+		alertDialog.show();
 	}
 
 	@Override
@@ -43,6 +58,8 @@ public class TimeAlarm extends BroadcastReceiver {
 		Log.v("liny:", "TimeAlarm receives a boardcast :"+intent.getStringExtra("note_title"));
 		
         showNotification(intent);
+        
+        showAlertDialog(intent);
 	}
 
 }

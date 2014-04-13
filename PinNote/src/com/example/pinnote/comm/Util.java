@@ -71,10 +71,10 @@ public class Util {
 		calendar.setTime(date);
 		
 		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
+		int month = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		
-		shortTime = (month + 1) + "/" + day;
+		shortTime = ((month < 10)? ("0"+month):month) + "/" + ((day < 10)?("0"+day):day);
 		if (year != currentYear){
 			shortTime = year + "/" + shortTime;
 		}
@@ -125,24 +125,29 @@ public class Util {
         calendar.setTime(createDate);
         long millisCreate =  calendar.getTimeInMillis();
         
-        double percent = 1;
-//      Log.v("Util:", "millisNow:"+millisNow+", millisCreate:"+millisCreate+", millisEnd:"+millisEnd);
-        if (millisNow > millisCreate)
-        {
-        	percent = ((double)(millisNow - millisCreate)/(double)(millisEnd - millisCreate));
+        if (millisNow > millisEnd){
+        	retColor = R.color.expire_gray; 
         }
-        percent *= 100;
-        Log.v("Util:", "percent:"+percent);
-        if (percent < 20){
-        	retColor = R.color.green_normal;
-        }else if (percent < 40){
-        	retColor = R.color.green_yellow;
-        }else if(percent < 60){
-        	retColor = R.color.yellow_alarm;
-        }else if(percent < 80){
-        	retColor = R.color.yellow_red;
-        }else{
-        	retColor = R.color.red_fatal;
+        else{
+        	double percent = 1;
+//          Log.v("Util:", "millisNow:"+millisNow+", millisCreate:"+millisCreate+", millisEnd:"+millisEnd);
+        	if (millisNow > millisCreate)
+        	{
+        		percent = ((double)(millisNow - millisCreate)/(double)(millisEnd - millisCreate));
+        	}
+        	percent *= 100;
+        	Log.v("Util:", "percent:"+percent);
+        	if (percent < 20){
+        		retColor = R.color.green_normal;
+        	}else if (percent < 40){
+        		retColor = R.color.green_yellow;
+        	}else if(percent < 60){
+        		retColor = R.color.yellow_alarm;
+        	}else if(percent < 80){
+        		retColor = R.color.yellow_red;
+        	}else{
+        		retColor = R.color.red_fatal;
+        	}
         }
         
                 

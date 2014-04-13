@@ -170,6 +170,12 @@ public class MainActivity extends FragmentActivity {
             case R.id.SeeAllMenu:
                 Toast.makeText(this, "SeeAllMenu", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.settingMenu:
+            	Intent settingIntent = new Intent();
+            	settingIntent.setClass(MainActivity.this, SettingsActivity.class);
+            	startActivity(settingIntent);
+            	overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+            	break;
             default:
                 super.onOptionsItemSelected(item);
                 break;

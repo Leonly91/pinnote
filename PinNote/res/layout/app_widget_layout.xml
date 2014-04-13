@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4fff"
+    android:id="@+id/app_widget_layout"
+    android:orientation="vertical" >
+    
+    <RelativeLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+        
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="3dp"
+            android:paddingLeft="6dp"
+            android:textColor="@color/white"
+            android:text="PinNote"/>
+        
+        <ImageButton android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:textSize="15sp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/black"
+            android:src="@drawable/widget_title_add"/>
+    </RelativeLayout>
+    
+    <ImageView android:layout_width="match_parent"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/dotted"
+		     />
+    
+	<ListView
+	    android:id="@+id/widget_listview"
+	    android:layout_width="match_parent"
+	    android:paddingTop = "10dp"
+	    android:layout_height="200dp" />
+
+</LinearLayout>

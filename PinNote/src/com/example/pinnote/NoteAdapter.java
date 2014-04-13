@@ -42,6 +42,7 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 			holder.txtTitle  = (TextView)row.findViewById(R.id.noteText);
 			holder.endTime   = (TextView)row.findViewById(R.id.endTime);
 			holder.alarmIcon = (ImageView)row.findViewById(R.id.smlAlarmIcon);
+			holder.dayText   = (TextView)row.findViewById(R.id.dayText);
 			
 			row.setTag(holder);
 		}
@@ -62,6 +63,10 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 		String shortTime = Util.getShortTimeStr(note.getmDeadLine());
 		if (null != shortTime){			
 			holder.endTime.setText(shortTime);
+			int day = Util.getDayOfTime(note.getmDeadLine());
+			if ((day - 1)>=0 && (day - 1) < 7){
+				holder.dayText.setText(context.getResources().getStringArray(R.array.day_items)[day - 1]);
+			}
 		}
 		
 		return row;
@@ -73,5 +78,6 @@ public class NoteAdapter extends ArrayAdapter<Note>{
         TextView txtTitle;
         TextView endTime;
         ImageView alarmIcon;
+        TextView dayText;
     }
 }
