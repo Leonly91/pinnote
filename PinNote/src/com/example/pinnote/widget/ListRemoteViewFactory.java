@@ -26,7 +26,7 @@ public class ListRemoteViewFactory implements RemoteViewsService.RemoteViewsFact
 	private List<Note> data = new ArrayList<Note>();
 	
 	public ListRemoteViewFactory(Context context, Intent intent){
-		Log.v("widget", "ListRemoteViewFactory");
+		Log.v("widget_pinnote", "ListRemoteViewFactory");
 		this.context = context;
 	}
 	
@@ -55,15 +55,24 @@ public class ListRemoteViewFactory implements RemoteViewsService.RemoteViewsFact
 		int drawableId;
 		RemoteViews rv = new RemoteViews (context.getPackageName(), R.layout.app_widget_item);
 		rv.setTextViewText(R.id.app_widget_item_text, data.get(position).getmTitle());
+		String shortTime = Util.getShortTimeStr(data.get(position).getmDeadLine());
+		if (null != shortTime){	
+			rv.setTextViewText(R.id.app_widget_item_time, shortTime);
+		}
+		
 		Drawable drawable = context.getResources().getDrawable(R.drawable.circle);
 		
 		GradientDrawable  gd1 = new GradientDrawable();
 		gd1.setColor(color);
 		gd1.setShape(GradientDrawable.OVAL);
 //		drawableId = context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+		
+		Intent viewIntent = new Intent();
+		viewIntent.putExtra(AppWidgetActivity.COLLECTION_VIEW_EXTRA, position);
+		rv.setOnClickFillInIntent(R.id.app_widget_item_layout, viewIntent);
+//		Log.v("widget_pinnote", "ListRemoteViewFactory:getViewAt:"+data.get(position).getmTitle());
 				
 		rv.setInt(R.id.app_widget_imgIcon, "setBackgroundResource", R.drawable.circle);
-		Log.v("widget", "ListRemoteViewFactory:getViewAt."+data.get(position).getmTitle());
 		return rv;
 	}
 

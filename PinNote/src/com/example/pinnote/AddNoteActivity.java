@@ -7,6 +7,7 @@ import com.example.pinnote.comm.TimeAlarm;
 import com.example.pinnote.comm.Util;
 import com.example.pinnote.comm.ViewInlineFragment;
 import com.example.pinnote.db.DBUtil;
+import com.example.pinnote.widget.AppWidgetActivity;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -15,6 +16,8 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -60,6 +63,8 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_note);
+		
+		Log.v("widget_pinnote","add note activity");
 		
 		editMode = false;
 		crntNote = new Note("");
@@ -127,6 +132,13 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 		return super.onKeyDown(keyCode, event);
 	}
 	
+	private void sendNewBroadcast(){
+		Intent intent = new Intent();
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), AppWidgetActivity.class));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+		this.sendBroadcast(intent);
+	}
 	
 	public boolean onMenuItemSelected(int featureId, MenuItem item){
 		int itemId = item.getItemId();
@@ -157,6 +169,8 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 			{
 				Util.sendNotification(this, crntNote);
 			}
+			
+			sendNewBroadcast();
 			
 		    Intent intent = new Intent(this, MainActivity.class);
 		    AddNoteActivity.this.startActivity(intent);

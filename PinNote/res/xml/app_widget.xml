@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="100dip"
     android:minHeight="85dip"
+    android:updatePeriodMillis="1000"
     android:initialLayout="@layout/app_widget_layout"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen"
+    android:widgetCategory="home_screen|keyguard"
     >
     
 </appwidget-provider>

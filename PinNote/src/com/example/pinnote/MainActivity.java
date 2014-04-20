@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -59,15 +60,11 @@ public class MainActivity extends FragmentActivity {
 
         //Add DrawerLayout
         initDrawerView();
-        
-        //initListData();
 
         if (savedInstanceState == null){
             //displayView(0);
         }
         
-//        DBUtil.TestSaveObject(this);
-
     }
     
     private void initActionBarView(){
@@ -108,6 +105,7 @@ public class MainActivity extends FragmentActivity {
     }
     
     private void initDrawerView(){
+    	mTitle = getString(R.string.app_name);
     	navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
@@ -127,7 +125,7 @@ public class MainActivity extends FragmentActivity {
 
         navDrawerListadapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
         mDrawerList.setAdapter(navDrawerListadapter);
-
+        
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
@@ -145,7 +143,7 @@ public class MainActivity extends FragmentActivity {
                 invalidateOptionsMenu();
             }
         };
-
+        
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
     
@@ -174,6 +172,12 @@ public class MainActivity extends FragmentActivity {
             	Intent settingIntent = new Intent();
             	settingIntent.setClass(MainActivity.this, SettingsActivity.class);
             	startActivity(settingIntent);
+            	overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+            	break;
+            case R.id.login_tst:
+            	Intent LoginItent = new Intent();
+            	LoginItent.setClass(MainActivity.this, LoginActivity.class);
+            	startActivity(LoginItent);
             	overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             	break;
             default:
@@ -212,10 +216,6 @@ public class MainActivity extends FragmentActivity {
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             //To change body of implemented methods use File | Settings | File Templates.
             viewPager.setCurrentItem(tab.getPosition());
-            FragmentPagerAdapter adapter = (FragmentPagerAdapter)viewPager.getAdapter();
-            Fragment f = adapter.getItem(viewPager.getCurrentItem());
-            
-            
         }
 
     	@Override
@@ -231,7 +231,7 @@ public class MainActivity extends FragmentActivity {
             return;
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.exit_alarm, Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
 
             @Override

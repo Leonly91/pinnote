@@ -99,8 +99,11 @@ public class AListViewItemLCListener extends ListViewItemLongClickBaseListener{
 	        		NoteAdapter noteAdapter = new NoteAdapter(context, R.layout.mainlist_item_row, note_data);
 	        		noteAdapter.setNotifyOnChange(true);
 	        		listView.setAdapter(noteAdapter);
-	        		Toast.makeText(dialog.getContext(), "É¾³ý³É¹¦", Toast.LENGTH_SHORT).show();
+	        		Toast.makeText(dialog.getContext(), context.getString(R.string.rmv_info), Toast.LENGTH_SHORT).show();
 				}
+	        	
+	        	//send refresh widget boardcast
+	        	sendRefreshWidgetBoardcast(context);
 	        	
 				dialog.dismiss();
 				break;

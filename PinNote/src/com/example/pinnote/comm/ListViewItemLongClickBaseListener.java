@@ -7,10 +7,14 @@ import com.example.pinnote.Note;
 import com.example.pinnote.NoteAdapter;
 import com.example.pinnote.R;
 import com.example.pinnote.db.DBUtil;
+import com.example.pinnote.widget.AppWidgetActivity;
 
 import android.app.Dialog;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Vibrator;
 import android.util.Log;
@@ -66,6 +70,17 @@ public abstract class ListViewItemLongClickBaseListener implements OnItemLongCli
 		vib.vibrate(30);
 		
 		return false;
+	}
+	
+	protected void sendRefreshWidgetBoardcast(Context context){
+		if (context == null){
+			return;
+		}
+		Intent intent = new Intent();
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidgetActivity.class));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+		context.sendBroadcast(intent);
 	}
 	
 }

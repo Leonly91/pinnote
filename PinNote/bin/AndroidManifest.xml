@@ -10,8 +10,9 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -43,18 +44,32 @@
             android:enabled="true" />
 
         <receiver android:name="com.example.pinnote.comm.TimeAlarm" />
-        <receiver android:name="com.example.pinnote.widget.AppWidgetActivity" android:label="PinNote Widget">
+        <receiver
+            android:name="com.example.pinnote.widget.AppWidgetActivity"
+            android:label="PinNote Widget" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.pinnote.widget.BTN_ADD_ACTION" />
+                <action android:name="com.example.pinnote.widget.COLLECTION_VIEW_ACTION" />
+                <action android:name="com.example.pinnote.widget.COLLECTION_REFRESH_DATA" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget" />
         </receiver>
-        <service android:name="com.example.pinnote.widget.ListWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service
+            android:name="com.example.pinnote.widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name="com.example.pinnote.SettingsActivity"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.example.pinnote.LoginActivity"
+            android:label="@string/title_activity_login" >
         </activity>
     </application>
 

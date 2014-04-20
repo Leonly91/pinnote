@@ -13,4 +13,7 @@
     <item android:id="@+id/helpMenu"
           android:title="@string/about"
           android:showAsAction="ifRoom" />
+    <item android:id="@+id/login_tst"
+          android:title="@string/login_tst"
+          android:showAsAction="ifRoom" />
 </menu>

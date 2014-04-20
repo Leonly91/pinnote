@@ -2,12 +2,15 @@ package com.example.pinnote;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -61,6 +64,17 @@ public class NavDrawerListAdapter extends BaseAdapter {
         }else{
             txtCount.setVisibility((View.GONE));
         }
+        
+        convertView.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+				Log.v("liny:", "drawer click");
+			}
+        	
+        });
 
         return convertView;
     }
