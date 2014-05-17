@@ -85,7 +85,7 @@ public class ListRemoteViewFactory implements RemoteViewsService.RemoteViewsFact
 	@Override
 	public boolean hasStableIds() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -102,7 +102,13 @@ public class ListRemoteViewFactory implements RemoteViewsService.RemoteViewsFact
 	@Override
 	public void onDataSetChanged() {
 		// TODO Auto-generated method stub
-		
+		data.clear();
+		if (null != context){
+			Note note_data[] = DBUtil.getTodoNoteArray(context);
+			for (Note note: note_data){
+				data.add(note);
+			}
+		}
 	}
 
 	@Override

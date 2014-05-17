@@ -74,10 +74,11 @@ public abstract class ListViewItemLongClickBaseListener implements OnItemLongCli
 	
 	protected void sendRefreshWidgetBoardcast(Context context){
 		if (context == null){
+			Log.e("widget_pinnote", "ListViewItemLongClickBaseListener call sendRefreshWidgetBoardcast fail. context is null");
 			return;
 		}
 		Intent intent = new Intent();
-		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		intent.setAction(AppWidgetActivity.COLLECTION_VIEW_REFRESH);
 		int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidgetActivity.class));
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 		context.sendBroadcast(intent);

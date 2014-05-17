@@ -17,7 +17,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class AppWidgetActivity extends AppWidgetProvider{
-	private Context context;
+	//private Context context;
 	
 	public static final String BTN_ADD_ACTION = "com.example.pinnote.widget.BTN_ADD_ACTION";
 	public static final String COLLECTION_VIEW_REFRESH = "com.example.pinnote.widget.COLLECTION_REFRESH_DATA";
@@ -26,7 +26,7 @@ public class AppWidgetActivity extends AppWidgetProvider{
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		this.context = context;
+		//this.context = context;
 		
 		Intent intent = new Intent(context, ListWidgetService.class);
 		
@@ -54,11 +54,14 @@ public class AppWidgetActivity extends AppWidgetProvider{
 			
 			appWidgetManager.updateAppWidget(appWidgetIds[i], myRemoteView);
 		}
+		
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 	
 	@Override
     public void onReceive(Context context, Intent intent) {
+		super.onReceive(context, intent);
+		
 		String action = intent.getAction();
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 		
@@ -74,8 +77,6 @@ public class AppWidgetActivity extends AppWidgetProvider{
 		}
 		else if (action.equals(BTN_ADD_ACTION)){
 			//add new note
-//			Log.v("widget_pinnote", "Add Btn Click");
-			
 			Intent addIntent = new Intent();
 			addIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			addIntent.setClass(context, AddNoteActivity.class);
@@ -83,17 +84,22 @@ public class AppWidgetActivity extends AppWidgetProvider{
 		}
 		else if (action.equals(COLLECTION_VIEW_REFRESH)){
 			//refresh listveiw data
-			Log.v("widget_pinnote", "receive COLLECTION_VIEW_REFRESH");
-			Intent refreshIntent = new Intent(context, ListWidgetService.class);
-			int len = appWidgetManager.getAppWidgetIds(new ComponentName(context, AppWidgetActivity.class)).length;
-			Log.v("widget_pinnote", "OnReceive VIEW_REFRESH. ids = "+len);
-			RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
-			remoteView.setTextViewText(R.id.app_widget_item_text, "new_note");
-			remoteView.setRemoteAdapter(R.id.widget_listview, refreshIntent);
-			appWidgetManager.updateAppWidget(new ComponentName(context, AppWidgetActivity.class), remoteView);
+			Log.v("widget_pinnote", "receive a COLLECTION_VIEW_REFRESH");
+			
+			updateListViewData(context);
+			
+			return;
 		}
-		
-		super.onReceive(context, intent);
+	}
+	
+	private void updateListViewData(Context context){
+		if (context == null){
+			Log.e("widget_pinnote", "AppWidgetActivity call updateListViewData fail. context is null");
+			return;
+		}
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, AppWidgetActivity.class));
+		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listview);
 	}
 	
 	@Override

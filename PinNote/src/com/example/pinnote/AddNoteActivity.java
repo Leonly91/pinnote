@@ -134,7 +134,7 @@ public class AddNoteActivity extends Activity implements OnClickListener{
 	
 	private void sendNewBroadcast(){
 		Intent intent = new Intent();
-		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		intent.setAction(AppWidgetActivity.COLLECTION_VIEW_REFRESH);
 		int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), AppWidgetActivity.class));
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 		this.sendBroadcast(intent);
